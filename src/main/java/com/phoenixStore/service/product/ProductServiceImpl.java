@@ -1,5 +1,10 @@
 package com.phoenixStore.service.product;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.phoenixStore.data.dto.ProductDto;
 import com.phoenixStore.data.models.Product;
 import com.phoenixStore.data.repository.ProductRepository;
@@ -67,5 +72,38 @@ public class ProductServiceImpl implements ProductService{
         updatedProduct.setPrice(productDetails.getPrice());
 
         return productRepository.save(updatedProduct);
+    }
+
+    private Product saveOrUpdateProduct(Product product){
+        if (product == null){
+            throw new BusinessLogicException("Product cannot be null");
+        }
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product updateProductDetails(Long productId, JsonPatch patch) {
+        Optional<Product> productQuery = productRepository.findById(productId);
+        if (productQuery.isEmpty()){
+            throw new BusinessLogicException("Product with Id" + productId + "Does not exist");
+        }
+        Product updatedProduct = productQuery.get();
+
+        try{
+            updatedProduct = applyPatchToProduct(patch , updatedProduct);
+            return saveOrUpdateProduct(updatedProduct);
+        }catch (JsonPatchException | JsonProcessingException je){
+            throw new BusinessLogicException("Product update Failed");
+        }
+
+    }
+
+    private Product applyPatchToProduct(JsonPatch patch, Product updatedProduct) throws JsonPatchException, JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode patched =  patch.apply(objectMapper.convertValue(updatedProduct, JsonNode.class));
+
+        return objectMapper.treeToValue(patched, Product.class);
     }
 }

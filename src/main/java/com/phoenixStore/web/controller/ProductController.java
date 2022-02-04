@@ -1,21 +1,22 @@
 package com.phoenixStore.web.controller;
 
 
+import com.github.fge.jsonpatch.JsonPatch;
 import com.phoenixStore.data.dto.ApiResponse;
 import com.phoenixStore.data.dto.ProductDto;
 import com.phoenixStore.data.models.Product;
 import com.phoenixStore.service.product.ProductService;
+import com.phoenixStore.web.exception.BusinessLogicException;
 import com.phoenixStore.web.exception.ProductDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/product")
 public class ProductController {
 
@@ -59,4 +60,27 @@ public class ProductController {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PatchMapping(path = "/{productId}", consumes = "application/json-patch+json")
+    public ResponseEntity<?> updateMyProduct(@PathVariable Long productId, @RequestBody JsonPatch patch){
+        try{
+            Product updatedProduct = productService.updateProductDetails(productId, patch);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+        }catch (BusinessLogicException ex){
+          return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
 }
+
+/*[
+
+for postman to make a patch request
+{
+    "op": "replace", "path" : "/description" , "value" : "This is a good des"
+},
+
+{
+    "op" : "replace" , "path" : "/price" , "value" : 890
+}
+
+]*/

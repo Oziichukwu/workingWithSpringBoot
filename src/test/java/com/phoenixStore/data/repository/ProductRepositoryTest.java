@@ -81,10 +81,19 @@ class ProductRepositoryTest {
     @DisplayName("Find product by name")
     void findThatProductExistInTheDatabase(){
 
-        Product productName = productRepository.findByName("car").orElse(null);
+        Product productName = productRepository.findByName("television").orElse(null);
 
         assertThat(productName).isNotNull();
-        assertThat(productName).isNotNull();
-        assertThat(productName).isEqualTo("car");
+        assertThat(productName.getId()).isEqualTo(14);
+        assertThat(productName.getName()).isEqualTo("television");
+        assertThat(productName.getPrice()).isEqualTo(6000);
+
+    }
+
+    @Test
+    @DisplayName("Update product Test")
+    void checkThatProductCanBeUpdatedTest(){
+        // Given
+
     }
 }

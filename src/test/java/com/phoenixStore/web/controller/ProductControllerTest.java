@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,9 +72,21 @@ class ProductControllerTest {
     @DisplayName("Post Product api test")
     void postProductTest() throws Exception {
 
-        mockMvc.perform(post("/api/v1/product")
-                .contentType("application/json")
-                        .content(createJsonObject))
+//        mockMvc.perform(post("/api/v1/product")
+//                .contentType("application/json")
+//                        .content(createJsonObject))
+//                .andExpect(status().is(201))
+//                .andDo(print());
+
+
+        MockHttpServletRequestBuilder request= MockMvcRequestBuilders.post("/api/v1/product")
+                .param("name", "Bamboo Chair")
+                .param("description", "World class bamboo")
+                .param("price", "5540")
+                .param("quantity", "5");
+
+        mockMvc.perform(request
+                        .contentType("multipart/form-data"))
                 .andExpect(status().is(201))
                 .andDo(print());
     }

@@ -31,12 +31,12 @@ public class ProductController {
         //return ResponseEntity.ok().body(products);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> createProduct(@RequestBody ProductDto productDto){
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createProduct(@ModelAttribute ProductDto productDto){
         try {
             Product product = productService.createProduct(productDto);
             return new ResponseEntity<>(product, HttpStatus.CREATED);
-        }catch (ProductDoesNotExistException e){
+        }catch (ProductDoesNotExistException | BusinessLogicException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

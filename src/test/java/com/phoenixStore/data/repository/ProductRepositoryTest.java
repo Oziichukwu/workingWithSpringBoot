@@ -39,19 +39,19 @@ class ProductRepositoryTest {
 
         Product product = new Product();
 
-        product.setName("Bamboo Chair");
-        product.setDescription("My Bamboo Chair");
+        product.setName("World class Bamboo Chair");
+        product.setDescription("My Bamboo Chair is fine");
         product.setPrice(5678);
-        product.setQuantity(9);
+        product.setQuantity(8);
 
         assertThat(product.getId()).isNull();
 
         productRepository.save(product);
         log.info("Product Saved -> {}", product);
         assertThat(product.getId()).isNotNull();
-        assertThat(product.getName()).isEqualTo("Bamboo Chair");
+        assertThat(product.getName()).isEqualTo("World class Bamboo Chair");
         assertThat(product.getPrice()).isEqualTo(5678);
-        assertThat(product.getQuantity()).isEqualTo(9);
+        assertThat(product.getQuantity()).isEqualTo(8);
         assertThat(product.getDateCreated()).isNotNull();
     }
 
@@ -94,6 +94,19 @@ class ProductRepositoryTest {
     @DisplayName("Update product Test")
     void checkThatProductCanBeUpdatedTest(){
         // Given
+
+        Product savedProduct = productRepository.findByName("television").orElse(null);
+        assertThat(savedProduct).isNotNull();
+
+        assertThat(savedProduct.getName()).isEqualTo("television");
+        assertThat(savedProduct.getPrice()).isEqualTo(6000);
+
+        savedProduct.setName("chair");
+        savedProduct.setPrice(1500);
+
+        productRepository.save(savedProduct);
+        assertThat(savedProduct.getName()).isEqualTo("chair");
+        assertThat(savedProduct.getPrice()).isEqualTo(1500);
 
     }
 }

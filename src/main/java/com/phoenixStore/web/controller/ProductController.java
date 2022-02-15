@@ -44,8 +44,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<?>findProduct(@PathVariable Long productId){
         try {
-            productService.findProductById(productId);
-            return new ResponseEntity<>(new ApiResponse(true, "Product Found"), HttpStatus.OK);
+            return new ResponseEntity<>(productService.findProductById(productId), HttpStatus.OK);
         }catch (ProductDoesNotExistException e){
             return new ResponseEntity<>(new ApiResponse(false, "Product does not exist"), HttpStatus.BAD_REQUEST);
         }

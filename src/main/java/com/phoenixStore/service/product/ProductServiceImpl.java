@@ -1,5 +1,6 @@
 package com.phoenixStore.service.product;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,12 +9,15 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.phoenixStore.data.dto.ProductDto;
 import com.phoenixStore.data.models.Product;
 import com.phoenixStore.data.repository.ProductRepository;
+import com.phoenixStore.service.cloud.CloudService;
 import com.phoenixStore.web.exception.BusinessLogicException;
 import com.phoenixStore.web.exception.ProductDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,6 +25,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CloudService cloudService;
 
     @Override
     public Product findProductById(Long productId) throws ProductDoesNotExistException{
@@ -52,6 +59,20 @@ public class ProductServiceImpl implements ProductService{
             throw new BusinessLogicException("Product with name " + productDto.getName()+ "already exist");
         }
         Product product = new Product();
+
+        try {
+            if (productDto.getImage() != null){
+                Map<?,?> uploadResult = cloudService.upload(productDto.getImage().getBytes(), ObjectUtils.asMap(
+                        "public_id",
+                        "inventory/" + productDto.getImage().getOriginalFilename(),
+                        "overwrite", true
+                ));
+                product.setImageUrl(uploadResult.get("url").toString());
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
@@ -107,3 +128,6 @@ public class ProductServiceImpl implements ProductService{
         return objectMapper.treeToValue(patched, Product.class);
     }
 }
+
+
+// CRUD OPERATIONS   C - POST ,,,   R - GET ,,,, U - PUT & PATCH ,,,, D- DELETE

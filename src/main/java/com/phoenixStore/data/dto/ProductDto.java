@@ -2,6 +2,7 @@ package com.phoenixStore.data.dto;
 
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ProductDto {
@@ -14,5 +15,5 @@ public class ProductDto {
 
     private int quantity;
 
-    private String imageUrl;
+    private MultipartFile image;
 }

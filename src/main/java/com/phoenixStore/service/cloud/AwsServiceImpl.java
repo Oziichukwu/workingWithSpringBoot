@@ -1,2 +1,14 @@
-package com.phoenixStore.service.cloud;public class AwsServiceImpl {
-}
+//package com.phoenixStore.service.cloud;
+//
+//import org.springframework.stereotype.Service;
+//
+//import java.io.File;
+//import java.util.Map;
+//
+//@Service("aws")
+//public class AwsServiceImpl implements CloudService{
+//    @Override
+//    public Map<?, ?> upload(File file, Map<?, ?> params) {
+//        return null;
+//    }
+//}

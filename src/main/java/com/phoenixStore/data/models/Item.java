@@ -17,18 +17,18 @@ public class Item {
     @OneToOne(fetch = FetchType.EAGER)
     private Product product;
 
-    private Integer quantityAddedToCart;
+    private Integer quantityAddedCart;
 
-    public Item(Product product, Integer quantityAddedToCart){
-        if (quantityAddedToCart <= product.getQuantity()){
-            this.quantityAddedToCart = quantityAddedToCart;
+    public Item(Product product, Integer quantityAddedCart){
+        if (quantityAddedCart <= product.getQuantity()){
+            this.quantityAddedCart = quantityAddedCart;
         }
         this.product = product;
     }
 
-    public void setQuantityAddedToCart(Integer quantityAddedToCart){
-        if (quantityAddedToCart <= product.getQuantity())
-            this.quantityAddedToCart = quantityAddedToCart;
+    public void setQuantityAddedCart(Integer quantityAddedCart){
+        if (quantityAddedCart <= product.getQuantity())
+            this.quantityAddedCart = quantityAddedCart;
 
     }
 }

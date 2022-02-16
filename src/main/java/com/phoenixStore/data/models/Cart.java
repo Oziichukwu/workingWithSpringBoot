@@ -18,7 +18,7 @@ public class Cart {
     @OneToMany
     private List<Product> products;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Item>itemList;
 
     @Transient

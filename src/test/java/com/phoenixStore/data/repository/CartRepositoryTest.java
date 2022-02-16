@@ -4,11 +4,14 @@ import com.phoenixStore.data.models.Cart;
 import com.phoenixStore.data.models.Item;
 import com.phoenixStore.data.models.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,5 +42,20 @@ public class CartRepositoryTest {
         assertThat(cart.getItemList().get(0).getProduct()).isNotNull();
         log.info("Cart object ::{} ", cart);
 
+    }
+
+    @Test
+    @DisplayName("view all items in a cart")
+    @Transactional
+    void viewItemsInACart(){
+        Cart savedCart = cartRepository.findById(345L).orElse(null);
+        assertThat(savedCart).isNotNull();
+        assertThat(savedCart.getItemList().size()).isEqualTo(3);
+
+        log.info("Cart Retrieved from the Db -> {}", savedCart);
+    }
+
+    @BeforeEach
+    void setUp() {
     }
 }

@@ -45,7 +45,7 @@ class CloudinaryServiceImplTest {
     @Test
     void uploadToCloudinaryTest() throws IOException {
 
-        Path file = Paths.get("src/test/resources/vlcsnap-2021-12-27-12h46m39s995.png");
+        Path file = Paths.get("src/test/resources/WIN_20210722_10_04_16_Pro.jpg");
         assertThat(file.toFile().exists()).isTrue();
         Map<?,?> uploadResult = cloudService.upload(Files.readAllBytes(file), ObjectUtils.emptyMap());
         log.info("Upload result to cloud -> {}", uploadResult);
@@ -55,9 +55,9 @@ class CloudinaryServiceImplTest {
     @Test
     void uploadMultipartToCloudinaryTest() throws IOException {
 //        load the file
-        Path path = Paths.get("src/test/resources/vlcsnap-2021-12-27-12h46m39s995.png"); //We get File location here
+        Path path = Paths.get("src/test/resources/WIN_20210722_10_04_16_Pro.jpg"); //We get File location here
         assertThat(path.toFile().exists());
-        assertThat(path.getFileName().toString()).isEqualTo("vlcsnap-2021-12-27-12h46m39s995.png");
+        assertThat(path.getFileName().toString()).isEqualTo("WIN_20210722_10_04_16_Pro.jpg");
 //        Convert it to multipart
         MultipartFile multipartFile = new MockMultipartFile(path.getFileName().toString(),
                 path.getFileName().toString(), "img/png", Files.readAllBytes(path));

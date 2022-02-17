@@ -2,6 +2,7 @@ package com.phoenixStore.service.cart;
 
 
 import com.phoenixStore.data.dto.CartItemDto;
+import com.phoenixStore.data.dto.CartResponseDto;
 import com.phoenixStore.data.models.AppUser;
 import com.phoenixStore.data.models.Cart;
 import com.phoenixStore.data.models.Item;
@@ -31,7 +32,7 @@ public class CartServiceImpl implements CartService{
 
 
     @Override
-    public void addItemToCart(CartItemDto cartItemDto) {
+    public CartResponseDto addItemToCart(CartItemDto cartItemDto) {
 
         Optional<AppUser> query = appUserRepository.findById(cartItemDto.getUserId());
 
@@ -56,11 +57,37 @@ public class CartServiceImpl implements CartService{
 
         myCart.addItem(cartItem);
 
+        myCart.setTotalPrice(myCart.getTotalPrice() + calculateItemPrice(cartItem));
+
         cartRepository.save(myCart);
 
+        return buildCartResponse(myCart);
+
     }
+
+    private CartResponseDto buildCartResponse(Cart cart){
+        return CartResponseDto.builder()
+                .totalItemsInCart(cart.getItemList())
+                .totalPrice(cart.getTotalPrice())
+                .build();
+    }
+
+
+    private double calculateItemPrice(Item item){
+        return item.getProduct().getPrice() * item.getQuantityAddedCart();
+    }
+
 
     private boolean quantityIsValid (Product product, int quantity){
         return product.getQuantity() >= quantity;
     }
+
+
+    @Override
+    public Cart viewCart() {
+        return null;
+    }
+
+
+
 }

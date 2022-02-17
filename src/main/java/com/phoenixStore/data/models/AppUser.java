@@ -31,5 +31,6 @@ public class AppUser {
 
     public AppUser(){
         this.myCart = new Cart();
+        this.myCart.setTotalPrice(0.0);
     }
 }

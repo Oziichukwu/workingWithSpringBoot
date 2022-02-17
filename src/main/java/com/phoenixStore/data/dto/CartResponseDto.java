@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CartDto {
+public class CartResponseDto {
 
     private List<Item> totalItemsInCart;
 

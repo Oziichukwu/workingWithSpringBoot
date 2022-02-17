@@ -1,6 +1,7 @@
 package com.phoenixStore.service.cart;
 
 import com.phoenixStore.data.dto.CartItemDto;
+import com.phoenixStore.data.dto.CartResponseDto;
 import com.phoenixStore.data.models.AppUser;
 import com.phoenixStore.data.models.Cart;
 import com.phoenixStore.data.models.Item;
@@ -32,6 +33,9 @@ class CartServiceImplTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CartService cartService;
 
     @BeforeEach
     void setUp() {
@@ -68,6 +72,22 @@ class CartServiceImplTest {
         cartRepository.save(myCart);
         assertThat(myCart.getItemList().size()).isEqualTo(4);
 
+    }
+
+
+    @Test
+    @DisplayName("Add item to cart test")
+    void addItemToCartTest2(){
+
+        CartItemDto cartItemDto = new CartItemDto();
+
+        cartItemDto.setQuantity(1);
+        cartItemDto.setUserId(5005L);
+        cartItemDto.setProductId(12L);
+
+        CartResponseDto cartResponseDto = cartService.addItemToCart(cartItemDto);
+        assertThat(cartResponseDto.getTotalItemsInCart()).isNotNull();
+        assertThat(cartResponseDto.getTotalPrice()).isNotNull();
     }
 
 }

@@ -25,11 +25,11 @@ values(102, 14, 2),
        (122, 15, 3),
        (133, 12, 1);
 
-insert into cart(id)
-values(345),
-       (346),
-       (347),
-       (348);
+insert into cart(id, total_price)
+values(345,0.0),
+       (346,0.0),
+       (347,0.0),
+       (348,0.0);
 
 insert into app_user(id, first_name, last_name, email, my_cart_id)
 values(5005, 'caleb', 'kola', 'kola@gmail.com', 345),

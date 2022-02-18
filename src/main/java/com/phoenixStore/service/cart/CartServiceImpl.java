@@ -1,6 +1,7 @@
 package com.phoenixStore.service.cart;
 
 
+import com.github.fge.jsonpatch.JsonPatch;
 import com.phoenixStore.data.dto.CartItemDto;
 import com.phoenixStore.data.dto.CartResponseDto;
 import com.phoenixStore.data.models.AppUser;
@@ -88,6 +89,10 @@ public class CartServiceImpl implements CartService{
         return null;
     }
 
+    @Override
+    public CartResponseDto updateCart(JsonPatch patch, Long itemId) {
+        return null;
+    }
 
 
 }

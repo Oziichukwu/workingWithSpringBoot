@@ -2,10 +2,8 @@ package com.phoenixStore.service.cart;
 
 import com.phoenixStore.data.dto.CartItemDto;
 import com.phoenixStore.data.dto.CartResponseDto;
-import com.phoenixStore.data.models.AppUser;
-import com.phoenixStore.data.models.Cart;
-import com.phoenixStore.data.models.Item;
-import com.phoenixStore.data.models.Product;
+import com.phoenixStore.data.dto.CartUpdateDto;
+import com.phoenixStore.data.models.*;
 import com.phoenixStore.data.repository.AppUserRepository;
 import com.phoenixStore.data.repository.CartRepository;
 import com.phoenixStore.data.repository.ProductRepository;
@@ -16,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -37,8 +39,14 @@ class CartServiceImplTest {
     @Autowired
     private CartService cartService;
 
+    CartUpdateDto cartUpdateDto;
+
     @BeforeEach
     void setUp() {
+         cartUpdateDto = CartUpdateDto.builder()
+                .itemId(102L)
+                .quantityOp(QuantityOp.INCREASE)
+                .userId(5005L).build();
     }
 
 
@@ -88,6 +96,69 @@ class CartServiceImplTest {
         CartResponseDto cartResponseDto = cartService.addItemToCart(cartItemDto);
         assertThat(cartResponseDto.getTotalItemsInCart()).isNotNull();
         assertThat(cartResponseDto.getTotalPrice()).isNotNull();
+    }
+
+
+    @Test
+    @DisplayName("Cart price updated test")
+    void cartPriceUpdatedTest(){
+        CartItemDto cartItemDto = new CartItemDto();
+
+        cartItemDto.setQuantity(2);
+        cartItemDto.setUserId(5005L);
+        cartItemDto.setProductId(12L);
+
+        CartResponseDto cartResponseDto = cartService.addItemToCart(cartItemDto);
+        assertThat(cartResponseDto.getTotalPrice()).isEqualTo(1000);
+        assertThat(cartResponseDto.getTotalItemsInCart().size()).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("update cart quantity item test")
+    void updateCartItemTest(){
+
+        AppUser appUser = appUserRepository.findById(cartUpdateDto.getUserId()).orElse(null);
+        assertThat(appUser).isNotNull();
+
+        Cart userCart = appUser.getMyCart();
+
+        assertThat(userCart.getItemList().size()).isEqualTo(1);
+
+        Item item = userCart.getItemList().get(0);
+
+//        Predicate<Item> itemPredicate  = item1 -> item1.getId().equals(cartUpdateDto.getItemId());
+//
+//        Optional<Item> optionalItem = userCart.getItemList().stream().filter(itemPredicate).findFirst();
+
+
+//        item = optionalItem.get();
+//
+//         for(int i = 0; i < userCart.getItemList().size() ; i++){
+//            item = userCart.getItemList().get(i);
+//            if(Objects.equals(item.getId(), cartUpdateDto.getItemId())){
+//
+//                break;
+//            }
+//        }
+
+        log.info("item -> {}", item);
+        assertThat(item).isNotNull();
+         assertThat(item.getQuantityAddedCart()).isEqualTo(2);
+        log.info("Cart Update obj -> {}", cartUpdateDto);
+
+       CartResponseDto responseDto = cartService.updateCart(cartUpdateDto);
+       assertThat(responseDto.getTotalItemsInCart()).isNotNull();
+       assertThat(responseDto.getTotalItemsInCart().get(0).getQuantityAddedCart()).isEqualTo(3);
+
+//
+//        for(int i = 0; i < userCart.getItemList().size() ; i++){
+//            item = responseDto.getTotalItemsInCart().get(i);
+//            if(Objects.equals(item.getId(), cartUpdateDto.getItemId())){
+//
+//                break;
+//            }
+//        }
+//        assertThat(item).isNotNull();
     }
 
 }

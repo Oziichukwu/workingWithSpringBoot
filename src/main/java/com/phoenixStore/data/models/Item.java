@@ -27,8 +27,8 @@ public class Item {
     }
 
     public void setQuantityAddedCart(Integer quantityAddedCart){
-        if (quantityAddedCart <= product.getQuantity())
+        if (product.getQuantity() >= quantityAddedCart) {
             this.quantityAddedCart = quantityAddedCart;
-
+        }else this.quantityAddedCart = 0;
     }
 }

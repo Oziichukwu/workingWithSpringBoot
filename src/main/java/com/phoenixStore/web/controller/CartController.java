@@ -21,7 +21,7 @@ public class CartController {
     private CartService cartService;
 
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<?>addItemToCart(@RequestBody CartItemDto cartItemDto){
         CartResponseDto cartResponseDto = null;
         try{
@@ -32,8 +32,8 @@ public class CartController {
         return ResponseEntity.ok().body(cartResponseDto);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> updateCartItem(@RequestBody CartUpdateDto cartUpdateDto){
+    @PatchMapping("")
+    public ResponseEntity<?>updateCartItem(@RequestBody CartUpdateDto cartUpdateDto){
 
         try {
             return new ResponseEntity<>(cartService.updateCart(cartUpdateDto), HttpStatus.OK);

@@ -16,7 +16,7 @@ insert into product(id, name, price, quantity)
 
 values(12, 'car', 500, 2),
 (13, 'bar', 500, 5),
-(14, 'television', 6000, 1),
+(14, 'television', 6000, 5),
 (15, 'gigner', 899, 8);
 
 
@@ -41,8 +41,8 @@ values(5005, 'caleb', 'kola', 'kola@gmail.com', 345),
 
 insert into cart_item_list(cart_id, item_list_id)
 values(345, 102),
-       (345, 122),
-       (345, 133);
+       (346, 122),
+       (347, 133);
 
 
 

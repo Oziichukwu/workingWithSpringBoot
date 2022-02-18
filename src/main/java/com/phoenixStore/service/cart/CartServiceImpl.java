@@ -4,10 +4,8 @@ package com.phoenixStore.service.cart;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.phoenixStore.data.dto.CartItemDto;
 import com.phoenixStore.data.dto.CartResponseDto;
-import com.phoenixStore.data.models.AppUser;
-import com.phoenixStore.data.models.Cart;
-import com.phoenixStore.data.models.Item;
-import com.phoenixStore.data.models.Product;
+import com.phoenixStore.data.dto.CartUpdateDto;
+import com.phoenixStore.data.models.*;
 import com.phoenixStore.data.repository.AppUserRepository;
 import com.phoenixStore.data.repository.CartRepository;
 import com.phoenixStore.data.repository.ProductRepository;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Service
 public class CartServiceImpl implements CartService{
@@ -85,13 +84,51 @@ public class CartServiceImpl implements CartService{
 
 
     @Override
-    public Cart viewCart() {
-        return null;
+    public CartResponseDto viewCart(Long userId) {
+
+        AppUser appUser = appUserRepository.findById(userId).orElse(null);
+        if (appUser == null){
+            throw new BusinessLogicException("User not found");
+        }
+
+        Cart cart = appUser.getMyCart();
+
+
+        return buildCartResponse(cart);
     }
 
     @Override
-    public CartResponseDto updateCart(JsonPatch patch, Long itemId) {
-        return null;
+    public CartResponseDto updateCart(CartUpdateDto cartUpdateDto) {
+
+        AppUser appUser = appUserRepository.findById(cartUpdateDto.getUserId()).orElse(null);
+        if (appUser == null){
+            throw new BusinessLogicException("User with id " + cartUpdateDto.getUserId() + " does not exist");
+        }
+
+        Cart myCart = appUser.getMyCart();
+
+        Item item = findCartItem(cartUpdateDto.getItemId(), myCart).orElse(null);
+        if (item == null){
+            throw new BusinessLogicException("Item not in cart");
+        }
+
+        if (cartUpdateDto.getQuantityOp() == QuantityOp.INCREASE){
+            item.setQuantityAddedCart(item.getQuantityAddedCart() + 1);
+            myCart.setTotalPrice(myCart.getTotalPrice() + item.getProduct().getPrice());
+        }else
+            if (cartUpdateDto.getQuantityOp() == QuantityOp.DECREASE){
+                item.setQuantityAddedCart(item.getQuantityAddedCart() - 1);
+                myCart.setTotalPrice(myCart.getTotalPrice() - item.getProduct().getPrice());
+            }
+
+        cartRepository.save(myCart);
+
+        return buildCartResponse(myCart);
+    }
+
+    private Optional<Item> findCartItem(Long itemId, Cart cart){
+        Predicate<Item> itemPredicate = i -> i.getId().equals(itemId);
+        return cart.getItemList().stream().filter(itemPredicate).findFirst();
     }
 
 

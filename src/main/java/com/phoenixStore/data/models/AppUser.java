@@ -26,7 +26,7 @@ public class AppUser {
     @Column(length = 500)
     private String address;
 
-    @OneToOne(cascade =  CascadeType.PERSIST)
+    @OneToOne(cascade =  CascadeType.ALL)
     private final Cart myCart;
 
     public AppUser(){

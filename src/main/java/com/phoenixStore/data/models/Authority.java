@@ -1,2 +1,6 @@
-package com.phoenixStore.data.models;public enum Authority {
+package com.phoenixStore.data.models;
+
+public enum Authority {
+
+    USER
 }

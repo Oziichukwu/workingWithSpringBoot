@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -20,8 +21,17 @@ public class AppUser {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    private boolean enabled;
+
+
+    @ElementCollection
+    private List<Authority> authorities;
 
     @Column(length = 500)
     private String address;

@@ -11,7 +11,7 @@ public class HomeController {
     @GetMapping("/home")
     public String showHomepage(){
 
-        return "This is village";
+        return "home";
 
     }
 }

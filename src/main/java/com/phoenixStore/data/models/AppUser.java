@@ -29,8 +29,7 @@ public class AppUser {
 
     private boolean enabled;
 
-
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<Authority> authorities;
 
     @Column(length = 500)

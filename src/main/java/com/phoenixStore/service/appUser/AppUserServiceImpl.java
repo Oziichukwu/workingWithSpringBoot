@@ -4,6 +4,7 @@ import com.phoenixStore.data.dto.AppUserDto;
 import com.phoenixStore.data.dto.AppUserResponseDto;
 import com.phoenixStore.data.models.AppUser;
 import com.phoenixStore.data.repository.AppUserRepository;
+import com.phoenixStore.service.email.EmailUtil;
 import com.phoenixStore.web.exception.UserAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,9 @@ public class AppUserServiceImpl implements AppUserService{
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailUtil emailUtil;
+
     @Override
     public AppUserResponseDto register(AppUserDto appUserDto) {
 
@@ -33,7 +37,10 @@ public class AppUserServiceImpl implements AppUserService{
         appUser.setPassword(passwordEncoder.encode(appUserDto.getPassword()));
         appUser.setAddress(appUserDto.getAddress());
 
+       emailUtil.sendEmail("oziichukwu1@gmail.com", "Location saved", "Location saved successfully");
+
         appUserRepository.save(appUser);
+
 
         return buildUserResponse(appUser);
     }

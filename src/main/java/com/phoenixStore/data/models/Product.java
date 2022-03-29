@@ -22,10 +22,12 @@ public class Product {
     private String description;
 
     private double price;
+
     private int quantity;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-ss HH-mm-ss")
     private LocalDateTime dateCreated;
+
     private String imageUrl;
 }

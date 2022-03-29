@@ -5,6 +5,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.phoenixStore.data.dto.ApiResponse;
 import com.phoenixStore.data.dto.ProductDto;
 import com.phoenixStore.data.models.Product;
+import com.phoenixStore.service.email.EmailUtil;
 import com.phoenixStore.service.product.ProductService;
 import com.phoenixStore.web.exception.BusinessLogicException;
 import com.phoenixStore.web.exception.ProductDoesNotExistException;
@@ -24,6 +25,8 @@ public class ProductController {
     private ProductService productService;
 
 
+
+
     @GetMapping()
     public ResponseEntity<?> findAllProducts(){
         List<Product> products = productService.getAllProducts();
@@ -35,6 +38,7 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@ModelAttribute ProductDto productDto){
         try {
             Product product = productService.createProduct(productDto);
+
             return new ResponseEntity<>(product, HttpStatus.CREATED);
         }catch (ProductDoesNotExistException | BusinessLogicException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
